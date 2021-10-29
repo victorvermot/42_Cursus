@@ -3,60 +3,86 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vvermot- <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*   By: vvermot- <vvermot-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 17:08:07 by vvermot-          #+#    #+#             */
-/*   Updated: 2021/10/19 17:08:10 by vvermot-         ###   ########.fr       */
+/*   Updated: 2021/10/28 14:02:39 by vvermot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "get_next_line.h"
-#include <fcntl.h>
-#include <stdio.h>
 
-void	get_content(char *buf, char **ret)
+char	*copy_line(char **line, char **buf_pos, int *is_empty)
 {
-	printf("%s", buf);
-	int	i;
+	int			i;
+	char		*new_pos;
 
-	i = -1;
-	while (buf[++i] != '\n' && buf[i])
+	new_pos = NULL;
+	i = 0;
+	while ((*buf_pos)[i] != '\n' && (*buf_pos)[i])
+		i++;
+	if ((*buf_pos)[i] == '\n')
 	{
-		*(ret[i]) = buf[i];
+		i++;
+		*line = ft_substr(*buf_pos, 0, i);
+		*is_empty = *is_empty + 1;
 	}
-	*(ret[i]) = '\n';
+	else if ((*buf_pos)[i] == '\0' && *buf_pos)
+		*line = ft_strdup(*buf_pos);
+	new_pos = ft_strdup(&(*buf_pos)[i]);
+	free(*buf_pos);
+	*buf_pos = NULL;
+	if (i == 0)
+	{
+		free(new_pos);
+		free(*line);
+		*line = NULL;
+	}
+	return (new_pos);
 }
 
-char	*get_new_line(char *str)
+int	check_validity(int fd, char **buffer, int *is_empty)
 {
-	printf("%s", str);
-	return (str);
+	if (fd < 0 || BUFFER_SIZE <= 0)
+	{
+		free(*buffer);
+		*buffer = NULL;
+		return (0);
+	}
+	if (read(fd, *buffer, 0) < 0 || *is_empty == 1)
+	{
+		*is_empty = 0;
+		free(*buffer);
+		*buffer = NULL;
+		return (0);
+	}
+	return (1);
 }
 
 char	*get_next_line(int fd)
 {
-	char		*buf;
-	char static	*ret;
-	int			i;
+	char static	*buf_pos = NULL;
+	char		*buffer;
+	char		*line;
+	static int	is_empty = 0;
+	static int	file = 1;
 
-	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (read(fd, buf, BUFFER_SIZE) < 1)
+	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!buffer)
 		return (NULL);
-	get_content(buf, &ret);
-	free(buf);
-	//printf("%s", ret);
-	return (ret);
-}
-
-int main()
-{
-	static int	fd;
-	int	i;
-
-	i = 1;
-	fd = open("test.txt", O_RDONLY);
-	while (i < 3)
+	if (!check_validity(fd, &buffer, &is_empty))
+		return (NULL);
+	if (!buf_pos && file)
+		buf_pos = ft_strdup("");
+	while (file && !ft_strchr(buf_pos, '\n'))
 	{
-		get_next_line(fd);
-		i++;
+		file = read(fd, buffer, BUFFER_SIZE);
+		buffer[file] = '\0';
+		buf_pos = ft_strjoin(buf_pos, buffer);
+		is_empty++;
 	}
+	buf_pos = copy_line(&line, &buf_pos, &is_empty);
+	free(buffer);
+	buffer = NULL;
+	return (line);
 }

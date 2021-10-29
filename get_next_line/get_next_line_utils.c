@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vvermot- <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*   By: vvermot- <vvermot-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 17:08:15 by vvermot-          #+#    #+#             */
-/*   Updated: 2021/10/19 17:08:17 by vvermot-         ###   ########.fr       */
+/*   Updated: 2021/10/28 14:02:39 by vvermot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "get_next_line.h"
 
 unsigned long int	ft_strlen(const char *s)
@@ -32,18 +33,10 @@ char	*ft_strdup(const char *s1)
 	ret = (char *)malloc(i * sizeof(const char) + 1);
 	if (!ret)
 		return (NULL);
-	i = 0;
-	while (s1[i] != '\n' && s1[i])
-	{
+	i = -1;
+	while (s1[++i])
 		ret[i] = s1[i];
-		i++;
-		if (s1[i] == '\n')
-			ret[i] = s1[i];
-	}
-	if (ret[i] == '\n')
-		ret[++i] = '\0';
-	else
-		ret[i] = '\0';
+	ret[i] = '\0';
 	return (ret);
 }
 
@@ -62,7 +55,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		ret = (char *)malloc(len * sizeof(char) + 1);
 	if (!ret)
 		return (NULL);
-	while (s[start] && i < len && start < ft_strlen(s))
+	while (s[start] && start < len && start < ft_strlen(s))
 		ret[i++] = s[start++];
 	ret[i] = '\0';
 	return (ret);
@@ -70,14 +63,41 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 char	*ft_strchr(const char *s, int c)
 {
+	int	i;
+
+	i = 0;
 	c = (char)c;
-	while (*s)
+	if (!s)
+		return (NULL);
+	while (s[i])
 	{
-		if (*s == c)
-			return ((char *)s);
-		s++;
+		if (s[i] == c)
+			return ((char *)&s[i]);
+		i++;
 	}
-	if (*s == '\0' && c == '\0')
-		return ((char *)s);
+	if (s[i] == '\0' && c == '\0')
+		return ((char *)&s[i]);
 	return (0);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	int		i;
+	int		j;
+	int		len;
+	char	*ret;
+
+	j = -1;
+	i = -1;
+	len = ft_strlen(s1) + ft_strlen(s2);
+	ret = (char *)malloc(len * sizeof(char) + 1);
+	if (!ret)
+		return (NULL);
+	while (s1[++i])
+		ret[i] = s1[i];
+	while (s2[++j])
+		ret[i++] = s2[j];
+	ret[i] = '\0';
+	free(s1);
+	return (ret);
 }
