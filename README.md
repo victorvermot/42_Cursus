@@ -1,7 +1,7 @@
 # 42_Cursus
 
-This repo countains all the projects I did throughout my cursus in the school 42 Lausanne. I started the school in October 2021 and I currently am working on the "minitalk" project.
-You can click on each projects to see the code associated to them.
+This repo countains all the projects I did throughout my cursus in the school 42 Lausanne. I started the school in October 2021 and I currently am working on the "philosophers" project.
+You can click on some of the projects I found worth sharing to see the code associated to them.
 
 # Projects
 
