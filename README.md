@@ -7,8 +7,8 @@ You can click on some of the projects I found worth sharing to see the code asso
 
 | Projects 				| 				Result |
 | --------------------- | ---------------------- |
-| [Libft]() | ![image 123](./images/result123.png) |
-| [Printf]() | ![image 100](./images/result100.png) |
+| Libft | ![image 123](./images/result123.png) |
+| Printf | ![image 100](./images/result100.png) |
 | [Born2BeRoot](https://www.notion.so/Virtualisation-1d61bf3afab04cc9aaf5a51107382f0f) | ![image 100](./images/result100.png) |
 | [Get_Next_Line]() | ![image 100](./images/result100.png) |
 | [So_Long](https://github.com/victorvermot/so_long) | ![image 100](./images/result121.png) |
